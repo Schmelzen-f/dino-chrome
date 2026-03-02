@@ -14,6 +14,8 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     Image cactus1Img;
     Image cactus2Img;
     Image cactus3Img;
+    Image dinosaurDuck;
+
 
     class Block {
         int x;
@@ -36,6 +38,11 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     int dinosaurHeight = 94;
     int dinosaurX = 50;
     int dinosaurY = boardHeight - dinosaurHeight;
+
+    int dinosaurDuckWidth = 118;
+    int dinosaurDuckHeight = 60;    
+    int dinosaurDuckX = 50;
+    int dinosaurDuckY = boardHeight - dinosaurDuckHeight;
 
     Block dinosaur;
 
@@ -76,7 +83,7 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
         cactus1Img = new ImageIcon(getClass().getResource("./img/cactus1.png")).getImage();
         cactus2Img = new ImageIcon(getClass().getResource("./img/cactus2.png")).getImage();
         cactus3Img = new ImageIcon(getClass().getResource("./img/cactus3.png")).getImage();
-
+        dinosaurDuck = new ImageIcon(getClass().getResource("./img/dino-duck.gif")).getImage();
 
 
         //dinosaur
@@ -160,16 +167,25 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
     }
 
 
-
+    boolean isDucking = false;
     public void move() {
-        //dinosaur
+      //dinosaur
         velocityY += gravity;
         dinosaur.y += velocityY;
+        
 
         if (dinosaur.y > dinosaurY) { //stop the dinosaur from falling past the ground
             dinosaur.y = dinosaurY;
             velocityY = 0;
-            dinosaur.img = dinosaurImg;
+
+            if(isDucking == true)
+            {   dinosaur = new Block(dinosaurDuckX, dinosaurDuckY, dinosaurDuckWidth, dinosaurDuckHeight, dinosaurDuck);
+                
+            }
+            else{
+                dinosaur = new Block(dinosaurX, dinosaurY, dinosaurWidth, dinosaurHeight, dinosaurImg);
+               
+            }
         }
 
         //cactus
@@ -179,6 +195,7 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
 
             if (collision(dinosaur, cactus)) {
                 gameOver = true;
+                dinosaur = new Block(dinosaurX, dinosaurY, dinosaurWidth, dinosaurHeight, dinosaurImg);
                 dinosaur.img = dinosaurDeadImg;
             }
         }
@@ -224,6 +241,18 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
                 velocityY = -17;
                 dinosaur.img = dinosaurJumpImg;
             }
+
+            if (gameOver) {
+                //restart game 
+                dinosaur.y = dinosaurY;
+                dinosaur.img = dinosaurImg;
+                velocityY = 0;
+                cactusArray.clear();
+                score = 0;
+                gameOver = false;
+                gameLoop.start();
+                placeCactusTimer.start();
+            }
         }
 
         /*if (e.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -233,11 +262,21 @@ public class ChromeDinosaur extends JPanel implements ActionListener, KeyListene
                 dinosaur.img = dinosaurJumpImg;
             }
         }*/
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            System.out.println("DUCK!");
+            isDucking = true;
+            repaint();   
+        }
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        
+        if (e.getKeyCode() == KeyEvent.VK_S) {
+            System.out.println("DUCK!");
+            isDucking = false;
+            repaint();  
+        }
+    
     }
 }
     
