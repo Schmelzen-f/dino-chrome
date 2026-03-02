@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
 
-public class ChromeDinosaur extends JPanel  {
+public class ChromeDinosaur extends JPanel implements ActionListener  {
     int boardWidth = 750;
     int boardHeight = 250;
 
@@ -39,6 +39,7 @@ public class ChromeDinosaur extends JPanel  {
 
     Block dinosaur;
 
+    Timer gameLoop;
 
 
      public ChromeDinosaur() {
@@ -55,6 +56,10 @@ public class ChromeDinosaur extends JPanel  {
 
         //dinosaur
         dinosaur = new Block(dinosaurX, dinosaurY, dinosaurWidth, dinosaurHeight, dinosaurImg);
+
+        //game timer
+        gameLoop = new Timer(1000/60, this); //1000/60 = 60 frames per 1000ms (1s)
+        gameLoop.start();
      }
      
      public void paintComponent(Graphics g) {
@@ -65,6 +70,11 @@ public class ChromeDinosaur extends JPanel  {
     public void draw(Graphics g) {
         //dinosaur
         g.drawImage(dinosaur.img, dinosaur.x, dinosaur.y, dinosaur.width, dinosaur.height, null);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
     }
 }
     
